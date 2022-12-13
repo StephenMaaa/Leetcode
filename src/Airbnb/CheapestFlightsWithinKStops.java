@@ -1,4 +1,4 @@
-package Graph;
+package Airbnb;
 
 /*
 There are n cities connected by some number of flights. You are given an array flights where flights[i] = [fromi, toi, pricei] indicates that there is a flight from city fromi to city toi with cost pricei.
@@ -102,9 +102,13 @@ public class CheapestFlightsWithinKStops {
     // approach 2 - Dijkstra Algorithm TC: O(O(V^2logV)) SC: O(V^2)
     // TC of Dijkstra = O(V) * Insert operations + O(V) * PollMin() + O(E) * DecreaseKeys() -> O(V) + O(ElogV)
     // Worst case: E = V^2
-    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+    public int findCheapestPrice3(int n, int[][] flights, int src, int dst, int k) {
         // adjacent matrix
         int[][] matrix = new int[n][n];
+        int[] parent = new int[n];
+        for (int i = 0; i < parent.length; i++) {
+            parent[i] = i;
+        }
         for (int[] flight : flights) {
             matrix[flight[0]][flight[1]] = flight[2];
         }
@@ -143,9 +147,11 @@ public class CheapestFlightsWithinKStops {
                     if (entry[1] + cost < minCosts[i]) {
                         minCosts[i] = entry[1] + cost;
                         minStops[i] = entry[2] + 1;
+//                        parent[i] = entry[0];
                         minHeap.offer(new int[]{i, minCosts[i], entry[2] + 1});
                     } else if (entry[2] + 1 < minStops[i]) {
                         //  minStops[i] = entry[2] + 1;
+//                        parent[i] = entry[0];
                         minHeap.offer(new int[]{i, entry[1] + cost, entry[2] + 1});
                     }
                 }
@@ -229,11 +235,53 @@ public class CheapestFlightsWithinKStops {
         return -1;
     }
 
+    // approach 1 - Dijkstra TC: O(N + EKlogEK) SC: O(N + EK)
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        Map<Integer, List<int[]>> map = new HashMap<>();
+        for (int[] flight : flights) {
+            if (!map.containsKey(flight[0])) {
+                map.put(flight[0], new ArrayList<>());
+            }
+            map.get(flight[0]).add(new int[]{flight[1], flight[2]});
+        }
+
+        int[] stops = new int[n];
+        Arrays.fill(stops, Integer.MAX_VALUE);
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        // {dist_from_src_node, node, number_of_stops_from_src_node}
+        pq.offer(new int[] {src, 0, 0});
+
+        while (!pq.isEmpty()) {
+            int[] temp = pq.poll();
+            int node = temp[0];
+            int dist = temp[1];
+            int steps = temp[2];
+
+            // We have already encountered a path with a lower cost and fewer stops,
+            // or the number of stops exceeds the limit.
+            if (steps > stops[node] || steps > k + 1) {
+                continue;
+            }
+            stops[node] = steps;
+
+
+            if (node == dst) {
+                return dist;
+            }
+            if (!map.containsKey(node))
+                continue;
+            for (int[] a : map.get(node)) {
+                pq.offer(new int[] {a[0], dist + a[1], steps + 1});
+            }
+        }
+        return -1;
+    }
+
     public static void main(String[] args) {
         CheapestFlightsWithinKStops test = new CheapestFlightsWithinKStops();
 //        int[][] flights = new int[][]{{0, 1, 100}, {1, 2, 100}, {2, 0, 100}, {1, 3, 600}, {2, 3, 200}};
 //        int[][] flights = new int[][]{{0, 1, 5}, {1, 2, 5}, {0, 3, 2}, {3, 1, 2}, {1, 4, 1}, {4, 2, 1}};
         int[][] flights = new int[][]{{0, 1, 1}, {0, 2, 5}, {1, 2, 1}, {2, 3, 1}};
-        System.out.println(test.findCheapestPrice2(4, flights, 0, 3, 1)); 
+        System.out.println(test.findCheapestPrice(4, flights, 0, 3, 1));
     }
 }
