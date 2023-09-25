@@ -49,7 +49,7 @@ public class SearchInShiftedSortedArray {
 //        return -1;
 //    }
 
-    public int search(int[] array, int target) {
+    public int search2(int[] array, int target) {
         // edge case
         if (array == null) {
             return -1;
@@ -71,6 +71,40 @@ public class SearchInShiftedSortedArray {
                 }
             } else {
                 if (array[right] >= target && array[mid] < target) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+        }
+        return -1;
+    }
+
+    // approach 1: Binary Search TC: O(logn) SC: O(1)
+    public int search(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+
+        while (left <= right) {
+            int mid = (left + right) >> 1;
+
+            // case 1: target == nums[mid]
+            // case 2: left is sorted
+            // case 3: right is sorted
+            if (target == nums[mid]) {
+                return mid;
+            } else if (nums[left] <= nums[mid]) {
+                // case 1: target in left side
+                // case 2: otherwise
+                if (target < nums[mid] && nums[left] <= target) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            } else {
+                // case 1: target in right side
+                // case 2: otherwise
+                if (nums[right] >= target && nums[mid] < target) {
                     left = mid + 1;
                 } else {
                     right = mid - 1;

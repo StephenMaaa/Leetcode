@@ -27,7 +27,7 @@ public class BinaryTreeDiameter {
         return max[0];
     }
 
-    private int traverse(TreeNode root, int[] max) {
+    private int traverse2(TreeNode root, int[] max) {
         // base case
         if (root == null) {
             return 0;
@@ -44,6 +44,30 @@ public class BinaryTreeDiameter {
         return Math.max(left, right) + 1;
     }
 
+    // approach 1: Recursion TC: O(n) SC: O(height)
+    public int diameterOfBinaryTree(TreeNode root) {
+        int[] max = new int[1];
+        traverse(root, max);
+        return max[0];
+    }
+
+    private int traverse(TreeNode root, int[] max) {
+        // base case
+        if (root == null) {
+            return 0;
+        }
+
+        // recursive case
+        int left = traverse(root.left, max);
+        int right = traverse(root.right, max);
+
+        // update
+        max[0] = Math.max(max[0], left + right);
+
+        return Math.max(left, right) + 1;
+    }
+
+
     public static void main(String[] args) {
         BinaryTreeDiameter test = new BinaryTreeDiameter();
         TreeNode root = new TreeNode(1);
@@ -57,6 +81,6 @@ public class BinaryTreeDiameter {
         n2.right = n3;
         n3.left = n5;
         n3.right = n4;
-        System.out.println(test.diameter(root));
+        System.out.println(test.diameterOfBinaryTree(root));
     }
 }

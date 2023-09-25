@@ -49,7 +49,7 @@ public class ThreeSum {
     }
 
     // approach 1 - Two Pointers + 2 Sum TC: O(n^2) SC: O(logn)
-    public List<List<Integer>> threeSum(int[] nums) {
+    public List<List<Integer>> threeSum2(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
 
         // sort
@@ -76,6 +76,47 @@ public class ThreeSum {
 
                 int sum = nums[left] + nums[right];
 
+                if (sum == remain) {
+                    res.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    left++;
+                    right--;
+                } else if (sum < remain) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        return res;
+    }
+
+    // approach 1: Pointers TC: O(n^2) SC: O(logn)
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+
+        // sort
+        Arrays.sort(nums);
+
+        for (int i = 0; i < nums.length - 2; i++) {
+            // handle duplicate values
+            if (i > 0 && nums[i - 1] == nums[i]) {
+                continue;
+            }
+
+            int remain = -nums[i];
+
+            int left = i + 1;
+            int right = nums.length - 1;
+            while (left < right) {
+                // handle duplicate values
+                if (left > i + 1 && nums[left - 1] == nums[left]) {
+                    left++;
+                    continue;
+                }
+
+                int sum = nums[left] + nums[right];
+
+                // check
                 if (sum == remain) {
                     res.add(Arrays.asList(nums[i], nums[left], nums[right]));
                     left++;

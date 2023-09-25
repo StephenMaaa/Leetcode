@@ -26,7 +26,7 @@ import java.util.Deque;
 public class NumberOfIslands {
     // time complexity: O(mn)
     // space complexity: O(mn)
-    public int numIslands(char[][] grid) {
+    public int numIslands2(char[][] grid) {
         // edge case
         if (grid == null || grid.length == 0 || grid[0].length == 0) {
             return 0;
@@ -42,14 +42,14 @@ public class NumberOfIslands {
                 // BFS
                 if (grid[i][j] == '1' && !visited[i][j]) {
                     count++;
-                    bfs(grid, visited, new int[]{i, j});
+                    bfs2(grid, visited, new int[]{i, j});
                 }
             }
         }
         return count;
     }
 
-    private void bfs(char[][] grid, boolean[][] visited, int[] start) {
+    private void bfs2(char[][] grid, boolean[][] visited, int[] start) {
         Deque<int[]> queue = new ArrayDeque<>();
         int[][] directions = new int[][]{{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
         queue.offer(start);
@@ -67,6 +67,50 @@ public class NumberOfIslands {
                 if (row >= 0 && row < grid.length && col >= 0 && col < grid[0].length && grid[row][col] == '1' && !visited[row][col]) {
                     queue.offer(new int[]{row, col});
                     visited[row][col] = true;
+                }
+            }
+        }
+    }
+
+    // approach 1: BFS TC: O(mn) SC: O(mn)
+    public int numIslands(char[][] grid) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+        boolean[][] visited = new boolean[rows][cols];
+        int[][] directions = new int[][]{{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        int count = 0;
+
+        // BFS
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                // check current index
+                if (grid[i][j] == '1' && !visited[i][j]) {
+                    visited[i][j] = true;
+                    bfs(grid, visited, directions, new int[]{i, j});
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private void bfs(char[][] grid, boolean[][] visited, int[][] directions, int[] origin) {
+        Deque<int[]> queue = new ArrayDeque<>();
+        queue.offer(origin);
+
+        while (!queue.isEmpty()) {
+            int[] entry = queue.poll();
+            int i = entry[0];
+            int j = entry[1];
+
+            for (int[] dir : directions) {
+                int row = i + dir[0];
+                int col = j + dir[1];
+
+                // check condition
+                if (row >= 0 && row < grid.length && col >= 0 && col < grid[0].length && grid[row][col] == '1' && !visited[row][col]) {
+                    visited[row][col] = true;
+                    queue.offer(new int[]{row, col});
                 }
             }
         }

@@ -62,11 +62,69 @@ public class RightViewOfBinaryTree {
         return res;
     }
 
-    // approach 2 - DFS TC: O(n) SC: O(height)
+//    // approach 2 - DFS TC: O(n) SC: O(height)
+//    public List<Integer> rightSideView(TreeNode root) {
+//        List<Integer> res = new ArrayList<>();
+//        dfs(root, 0, res);
+//        return res;
+//    }
+//
+//    private void dfs(TreeNode root, int level, List<Integer> res) {
+//        // base case
+//        if (root == null) {
+//            return;
+//        }
+//
+//        // recursive case
+//        if (level == res.size()) {
+//            res.add(root.val);
+//        }
+//        dfs(root.right, level + 1, res);
+//        dfs(root.left, level + 1, res);
+//    }
+
+    // approach 1: BFS TC: O(n) SC: O(n)
+    public List<Integer> rightSideView2(TreeNode root) {
+        // initialization
+        List<Integer> res = new ArrayList<>();
+
+        // edge case
+        if (root == null) {
+            return res;
+        }
+
+        Deque<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+
+        // BFS
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+
+                // add left and right subtrees
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+
+                // add the rightmost
+                if (i == size - 1) {
+                    res.add(node.val);
+                }
+            }
+        }
+        return res;
+    }
+
+    // approach 2: DFS TC: O(n) SC: O(height)
     public List<Integer> rightSideView(TreeNode root) {
         List<Integer> res = new ArrayList<>();
         dfs(root, 0, res);
-        return res;
+        return res; 
     }
 
     private void dfs(TreeNode root, int level, List<Integer> res) {
@@ -75,10 +133,12 @@ public class RightViewOfBinaryTree {
             return;
         }
 
-        // recursive case
         if (level == res.size()) {
             res.add(root.val);
         }
+
+        // recursive case
+        // explore the right subtree first
         dfs(root.right, level + 1, res);
         dfs(root.left, level + 1, res);
     }
@@ -102,6 +162,6 @@ public class RightViewOfBinaryTree {
         node2.right = node6;
         node4.right = node8;
         node5.left = node7;
-        System.out.println(test.rightView(null));
+        System.out.println(test.rightSideView(null));
     }
 }

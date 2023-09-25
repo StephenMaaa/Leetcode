@@ -38,14 +38,14 @@ public class RainbowSort {
         return array;
     }
 
-    private void swap(int[] array, int i, int j) {
+    private void swapw(int[] array, int i, int j) {
         int temp = array[i];
         array[i] = array[j];
         array[j] = temp;
     }
 
     // approach 1 - Pointers TC: O(n) SC: O(1)
-    public void sortColors(int[] nums) {
+    public void sortColors2(int[] nums) {
         int pointer0 = 0;
         int pointer1 = 0;
         int pointer2 = nums.length - 1;
@@ -64,6 +64,34 @@ public class RainbowSort {
                 pointer2--;
             }
         }
+    }
+
+    // approach 1: Pointers TC: O(n) SC: O(1)
+    public void sortColors(int[] nums) {
+        int pointer0 = 0;
+        int pointer1 = 0;
+        int pointer2 = nums.length - 1;
+        while (pointer1 <= pointer2) {
+            // case 1: red
+            // case 2: white
+            // case 3: blue
+            if (nums[pointer1] == 0) {
+                swap(nums, pointer0, pointer1);
+                pointer0++;
+                pointer1++;
+            } else if (nums[pointer1] == 1) {
+                pointer1++;
+            } else {
+                swap(nums, pointer1, pointer2);
+                pointer2--;
+            }
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
     }
 
     public static void main(String[] args) {

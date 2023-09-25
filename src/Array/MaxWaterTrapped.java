@@ -84,7 +84,7 @@ public class MaxWaterTrapped {
 //    }
 
     // approach 2 - Two Pointers TC: O(n) SC: O(1)
-    public int trap(int[] height) {
+    public int trap2(int[] height) {
         int res = 0;
         int left = 0;
         int right = height.length - 1;
@@ -101,6 +101,63 @@ public class MaxWaterTrapped {
                 left++;
             } else {
                 // check if bounded
+                if (rightBound < height[right]) {
+                    rightBound = height[right];
+                } else {
+                    res += rightBound - height[right];
+                }
+                right--;
+            }
+        }
+        return res;
+    }
+
+    // approach 1: Stack TC: O(n) SC: O(n)
+    public int trap3(int[] height) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        int res = 0;
+
+        // iterate heights
+        for (int i = 0; i < height.length; i++) {
+            // trap
+            while (!stack.isEmpty() && height[stack.peekFirst()] <= height[i]) {
+                // get right bound
+                int rightBound = height[stack.pollFirst()];
+
+                // get left bound
+                // edge case: leak to the left
+                if (stack.isEmpty()) {
+                    continue;
+                }
+
+                int dist = i - stack.peekFirst() - 1;
+                res += dist * (Math.min(height[stack.peekFirst()], height[i]) - rightBound);
+            }
+            stack.offerFirst(i);
+        }
+        return res;
+    }
+
+    // approach 2: Two Pointers TC: O(n) SC: O(1)
+    public int trap(int[] height) {
+        int left = 0;
+        int right = height.length - 1;
+        int leftBound = -1;
+        int rightBound = -1;
+        int res = 0;
+
+        // move two pointers
+        while (left < right) {
+            if (height[left] < height[right]) {
+                // check leftBound
+                if (leftBound < height[left]) {
+                    leftBound = height[left];
+                } else {
+                    res += leftBound - height[left];
+                }
+                left++;
+            } else {
+                // check rightBound
                 if (rightBound < height[right]) {
                     rightBound = height[right];
                 } else {

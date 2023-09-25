@@ -1,6 +1,8 @@
 package HashTable;
 
 /*
+LeetCode 217
+
 Given an array of integers, find if the array contains any duplicates.
         Your function should return true if any value appears at least twice in the array, and it should return false if every element is distinct.
 */
@@ -22,15 +24,30 @@ public class ContainsDuplicate {
 //        }
 //    }
 
-    // time complexity: O(n)
-    // space complexity: O(n)
+//    // time complexity: O(n)
+//    // space complexity: O(n)
+//    public boolean containsDuplicate(int[] nums) {
+//        Set<Integer> set = new HashSet<>();
+//        for (int i = 0; i < nums.length; i++) {
+//            if (set.contains(nums[i])) {
+//                return true;
+//            }
+//            set.add(nums[i]);
+//        }
+//        return false;
+//    }
+
+    // approach 1: Set TC: O(n) SC: O(n)
     public boolean containsDuplicate(int[] nums) {
         Set<Integer> set = new HashSet<>();
-        for (int i = 0; i < nums.length; i++) {
-            if (set.contains(nums[i])) {
+        for (int val : nums) {
+            // check
+            if (set.contains(val)) {
                 return true;
             }
-            set.add(nums[i]);
+
+            // update
+            set.add(val);
         }
         return false;
     }

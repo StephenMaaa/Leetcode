@@ -54,7 +54,7 @@ public class AddBinary {
 //    }
 
     // approach 1 - Two Pointers TC: O(MAX(m, n)) SC: O(1)
-    public String addBinary(String a, String b) {
+    public String addBinary2(String a, String b) {
         int pointerA = a.length() - 1;
         int pointerB  =b.length() - 1;
         StringBuilder sb = new StringBuilder();
@@ -78,8 +78,33 @@ public class AddBinary {
         return sb.reverse().toString();
     }
 
+    // approach 1: Two Pointers TC: O(MAX(m, n)) SC: O(1)
+    public String addBinary(String a, String b) {
+        StringBuilder res = new StringBuilder();
+        int pointerA = a.length() - 1;
+        int pointerB = b.length() - 1;
+        int carry = 0;
+
+        // add operation
+        while (pointerA >= 0 || pointerB >= 0) {
+            // retrieve bits
+            int bitA = pointerA >= 0 ? a.charAt(pointerA--) - '0' : 0;
+            int bitB = pointerB >= 0 ? b.charAt(pointerB--) - '0' : 0;
+
+            int sum = (bitA + bitB + carry) % 2;
+            carry = (bitA + bitB + carry) >> 1;
+            res.append(sum);
+        }
+
+        // check carry
+        if (carry > 0) {
+            res.append(carry);
+        }
+        return res.reverse().toString(); 
+    }
+
     public static void main(String[] args) {
         AddBinary test = new AddBinary();
-        System.out.println(test.addBinary("", "1"));
+        System.out.println(test.addBinary("11", "1"));
     }
 }

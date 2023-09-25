@@ -17,7 +17,7 @@ Given a string S, find the longest palindromic substring in S.
 public class LongestPalindromicSubstring {
     // time complexity: O(n^2)
     // space complexity: O(n^2)
-    public String longestPalindrome(String input) {
+    public String longestPalindrome4(String input) {
         // edge case
         if (input == null || input.length() == 0) {
             return input;
@@ -133,8 +133,42 @@ public class LongestPalindromicSubstring {
         return end - start -1;
     }
 
+    // approach 1: DP TC: O(n^2) SC: O(n^2)
+    public String longestPalindrome(String s) {
+        // initialization
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        int max = 0;
+        int maxStart = -1;
+        int maxEnd = -1;
+
+        for (int interval = 0; interval < s.length(); interval++) {
+            for (int i = 0; i < s.length() - interval; i++) {
+                int j = i + interval;
+
+                // check
+                if (s.charAt(i) == s.charAt(j)) {
+                    // base case: len <= 2
+                    // general case: len > 2
+                    if (interval <= 1) {
+                        dp[i][j] = true;
+                    } else {
+                        dp[i][j] = dp[i + 1][j - 1];
+                    }
+
+                    // update
+                    if (dp[i][j] && max < interval + 1) {
+                        max = interval + 1;
+                        maxStart = i;
+                        maxEnd = j;
+                    }
+                }
+            }
+        }
+        return s.substring(maxStart, maxEnd + 1);
+    }
+
     public static void main(String[] args) {
         LongestPalindromicSubstring test = new LongestPalindromicSubstring();
-        System.out.println(test.longestPalindrome3(""));
+        System.out.println(test.longestPalindrome("aacabdkacaa"));
     }
 }

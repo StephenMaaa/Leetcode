@@ -37,6 +37,6 @@ public class RemoveAdjacentRepeatedCharsIII {
 
     public static void main(String[] args) {
         RemoveAdjacentRepeatedCharsIII test = new RemoveAdjacentRepeatedCharsIII();
-        System.out.println(test.deDup("aabb"));
+        System.out.println(test.deDup("ecaabbc"));
     }
 }

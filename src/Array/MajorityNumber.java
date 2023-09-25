@@ -53,9 +53,29 @@ public class MajorityNumber {
         return candidate;
     }
 
+    // approach 1: Boyer Moore Algorithm TC: O(n) SC: O(1)
+    public int majorityElement(int[] nums) {
+        int candidate = 0;
+        int count = 0;
+        for (int i = 0; i < nums.length; i++) {
+            // check candidate
+            if (count == 0) {
+                candidate = nums[i];
+                count++;
+            } else {
+                if (candidate == nums[i]) {
+                    count++;
+                } else {
+                    count--;
+                }
+            }
+        }
+        return candidate;
+    }
+
     public static void main(String[] args) {
         MajorityNumber test = new MajorityNumber();
         int[] arr = new int[]{1, 2, 1, 2, 1};
-        System.out.println(test.majority2(arr));
+        System.out.println(test.majorityElement(arr));
     }
 }

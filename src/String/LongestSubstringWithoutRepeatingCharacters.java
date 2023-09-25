@@ -55,7 +55,7 @@ public class LongestSubstringWithoutRepeatingCharacters {
 //    }
 
     // approach 2 - Sliding Window + Map TC: O(n) SC: O(MIN(m, n))
-    public int lengthOfLongestSubstring(String s) {
+    public int lengthOfLongestSubstring2(String s) {
         Map<Character, Integer> map = new HashMap<>();
         int max = 0;
         int start = 0;
@@ -74,8 +74,60 @@ public class LongestSubstringWithoutRepeatingCharacters {
         return max;
     }
 
+    // approach 1: Sliding Window + Set TC: O(n) SC: O(1)
+    public int lengthOfLongestSubstring3(String s) {
+        Set<Character> set = new HashSet<>();
+        int start = 0;
+        int max = 0;
+
+        // sliding window
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            // check dup
+            if (set.contains(c)) {
+                // remove all characters before the current char
+                while (s.charAt(start) != c) {
+                    set.remove(s.charAt(start));
+                    start++;
+                }
+                start++;
+            } else {
+                set.add(c);
+            }
+
+            // update max
+            max = Math.max(max, set.size());
+        }
+        return max;
+    }
+
+    // approach 2: Sliding Window + Map TC: O(n) SC: O(1)
+    public int lengthOfLongestSubstring(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        int start = 0;
+        int max = 0;
+
+        // sliding window
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            // check dup
+            if (map.containsKey(c) && map.get(c) >= start) {
+                // remove all characters before the current char
+                int prev = map.get(c);
+                start = prev + 1;
+            }
+            map.put(c, i);
+
+            // update max
+            max = Math.max(max, i - start + 1);
+        }
+        return max;
+    }
+
     public static void main(String[] args) {
         LongestSubstringWithoutRepeatingCharacters test = new LongestSubstringWithoutRepeatingCharacters();
-        System.out.println(test.lengthOfLongestSubstring("pwwkewe"));
+        System.out.println(test.lengthOfLongestSubstring("aabaab!bb"));
     }
 }
