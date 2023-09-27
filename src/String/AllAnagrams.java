@@ -1,6 +1,8 @@
 package String;
 
 /*
+LeetCode 438
+
 Find all occurrence of anagrams of a given string s in a given string l. Return the list of starting indices.
 
         Assumptions
@@ -101,7 +103,7 @@ public class AllAnagrams {
     }
 
     // approach 1 - Sliding Window TC: O(n) SC: O(m)
-    public List<Integer> findAnagrams(String s, String p) {
+    public List<Integer> findAnagrams2(String s, String p) {
         List<Integer> res = new ArrayList<>();
 
         // generate frequency map
@@ -141,6 +143,53 @@ public class AllAnagrams {
 
             // check
             if (match == map.size()) {
+                res.add(i - p.length() + 1);
+            }
+        }
+        return res;
+    }
+
+    // approach 1: Sliding Window TC: O(n) SC: O(m)
+    public List<Integer> findAnagrams(String s, String p) {
+        // initialization
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : p.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+
+        List<Integer> res = new ArrayList<>();
+        int matches = 0;
+        for (int i = 0; i < s.length(); i++) {
+            // move left
+            if (i >= p.length()) {
+                char c = s.charAt(i - p.length());
+
+                // check
+                if (map.containsKey(c)) {
+                    int count = map.get(c);
+                    map.put(c, count + 1);
+
+                    // check matches
+                    if (count == 0) {
+                        matches--;
+                    }
+                }
+            }
+
+            // move right
+            char c = s.charAt(i);
+            if (map.containsKey(c)) {
+                int count = map.get(c);
+                map.put(c, count - 1);
+
+                // check matches
+                if (count == 1) {
+                    matches++;
+                }
+            }
+
+            // check anagram
+            if (matches == map.size()) {
                 res.add(i - p.length() + 1);
             }
         }
