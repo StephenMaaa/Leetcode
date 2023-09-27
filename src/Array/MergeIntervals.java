@@ -1,6 +1,8 @@
 package Array;
 
 /*
+LeetCode 56
+
 Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
 */
 
@@ -10,7 +12,7 @@ import java.util.List;
 
 public class MergeIntervals {
     // approach 1 - Sort TC: O(nlogn) SC: O(n)
-    public int[][] merge(int[][] intervals) {
+    public int[][] merge2(int[][] intervals) {
         // sort based on the first dimension (start)
         Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
 
@@ -35,6 +37,46 @@ public class MergeIntervals {
 //            res[i++] = interval;
 //        }
         return list.toArray(new int[list.size()][]);
+    }
+
+    // approach 1: Sorting TC: O(nlogn) SC: O(n)
+    public int[][] merge(int[][] intervals) {
+        // sort by start time in ascending order
+        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+
+        List<int[]> list = new ArrayList<>();
+        int[] interval = intervals[0];
+        for (int i = 1; i < intervals.length; i++) {
+            // check
+            // case 1: inclusive
+            // case 2: interaction
+            // case 3: separate
+//            if (interval[1] >= intervals[i][1]) {
+//                continue;
+//            } else if (interval[1] >= intervals[i][0]) {
+//                interval[1] = intervals[i][1];
+//            } else {
+//                list.add(interval);
+//                interval = intervals[i];
+//            }
+
+            if (interval[1] < intervals[i][0]) {
+                list.add(interval);
+                interval = intervals[i];
+            } else {
+                interval[1] = Math.max(interval[1], intervals[i][1]);
+            }
+        }
+
+        // add last interval
+        list.add(interval);
+
+        // populate
+        int[][] res = new int[list.size()][];
+        for (int i = 0; i < list.size(); i++) {
+            res[i] = list.get(i);
+        }
+        return res;
     }
 
     public static void main(String[] args) {

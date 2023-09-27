@@ -1,6 +1,8 @@
 package Recursion;
 
 /*
+LeetCode 54
+
 Traverse an M * N 2D array in spiral order clock-wise starting from the top left corner. Return the list of traversal sequence.
 
         Assumptions
@@ -62,7 +64,7 @@ public class SpiralOrderTraversalII {
     }
 
     // approach 1 - Iteration TC: O(mn) SC: O(1)
-    public List<Integer> spiralOrder(int[][] matrix) {
+    public List<Integer> spiralOrder2(int[][] matrix) {
         List<Integer> res = new ArrayList<>();
         int mSize = matrix.length;
         int nSize = matrix[0].length;
@@ -110,6 +112,57 @@ public class SpiralOrderTraversalII {
             }
         }
         return res;
+    }
+
+    // approach 1: Iteration TC: O(mn) SC: O(1)
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> res = new ArrayList<>();
+        int mSize = matrix.length;
+        int nSize = matrix[0].length;
+        int mOffset = 0;
+        int nOffset = 0;
+
+        while (mSize > 1 && nSize > 1) {
+            // right
+            for (int i = 0; i < nSize - 1; i++) {
+                res.add(matrix[mOffset][nOffset + i]);
+            }
+
+            // down
+            for (int i = 0; i < mSize - 1; i++) {
+                res.add(matrix[mOffset + i][nOffset + nSize - 1]);
+            }
+
+            // left
+            for (int i = nSize - 1; i > 0; i--) {
+                res.add(matrix[mOffset + mSize - 1][nOffset + i]);
+            }
+
+            // up
+            for (int i = mSize - 1; i > 0; i--) {
+                res.add(matrix[mOffset + i][nOffset]);
+            }
+
+            // update
+            mSize -= 2;
+            nSize -= 2;
+            mOffset++;
+            nOffset++;
+        }
+
+        // add remains
+        if (mSize == 1) {
+            // right
+            for (int i = 0; i < nSize; i++) {
+                res.add(matrix[mOffset][nOffset + i]);
+            }
+        } else if (nSize == 1) {
+            // down
+            for (int i = 0; i < mSize; i++) {
+                res.add(matrix[mOffset + i][nOffset + nSize - 1]);
+            }
+        }
+        return res; 
     }
 
     public static void main(String[] args) {
