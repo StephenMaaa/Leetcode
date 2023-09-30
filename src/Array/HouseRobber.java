@@ -1,6 +1,8 @@
 package Array;
 
 /*
+LeetCode 198
+
 You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security systems connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
 
         Given an integer array nums representing the amount of money of each house, return the maximum amount of money you can rob tonight without alerting the police.
@@ -42,7 +44,7 @@ public class HouseRobber {
 //    }
 
     // approach 1 - DP TC: O(n) SC: O(1)
-    public int rob(int[] nums) {
+    public int rob2(int[] nums) {
         // base case
         if (nums == null || nums.length == 0) {
             return 0;
@@ -68,6 +70,21 @@ public class HouseRobber {
             dp2 = temp + nums[i];
         }
         return Math.max(dp1, dp2);
+    }
+
+    // approach 1: DP TC: O(n) SC: O(1)
+    public int rob(int[] nums) {
+        // initialization
+        int dpA = 0;
+        int dpB = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            // update rules: dp[i] = MAX(dp[i - 2] + arr[i], dp[i - 1])
+            int temp = dpB;
+            dpB = Math.max(dpA + nums[i], dpB);
+            dpA = temp;
+        }
+        return dpB;
     }
 
     public static void main(String[] args) {
