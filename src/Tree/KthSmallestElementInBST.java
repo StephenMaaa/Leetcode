@@ -39,10 +39,38 @@ public class KthSmallestElementInBST {
 //    }
 
     // approach 1 - Recursion TC: O(n) SC: O(height)
-    public int kthSmallest(TreeNode root, int k) {
+    public int kthSmallest2(TreeNode root, int k) {
         int[] count = new int[]{k, 0};
         traverse(root, count);
         return count[1];
+    }
+
+    private void traverse2(TreeNode root, int[] count) {
+        // base case
+        if (root == null || count[0] <= 0) {
+            return;
+        }
+
+        // recursive case
+        traverse2(root.left, count);
+
+        count[0]--;
+        if (count[0] == 0) {
+            count[1] = root.val;
+            return;
+        }
+
+        traverse2(root.right, count);
+    }
+
+    // approach 1: Recursion TC: O(n) SC: O(height)
+    public int kthSmallest(TreeNode root, int k) {
+        // initialization
+        int[] count = new int[2];
+        count[0] = k;
+
+        traverse(root, count);
+        return count[1]; 
     }
 
     private void traverse(TreeNode root, int[] count) {
@@ -52,13 +80,14 @@ public class KthSmallestElementInBST {
         }
 
         // recursive case
+        // inorder traversal
         traverse(root.left, count);
 
-        count[0]--;
-        if (count[0] == 0) {
+        // check
+        if (count[0] == 1) {
             count[1] = root.val;
-            return;
         }
+        count[0]--;
 
         traverse(root.right, count);
     }
