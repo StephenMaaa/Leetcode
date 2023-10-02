@@ -1,6 +1,8 @@
 package DP;
 
 /*
+LeetCode 134
+
 There are n gas stations along a circular route, where the amount of gas at the ith station is gas[i].
 
         You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from the ith station to its next (i + 1)th station. You begin the journey with an empty tank at one of the gas stations.
@@ -37,26 +39,112 @@ There are n gas stations along a circular route, where the amount of gas at the 
 import java.util.PriorityQueue;
 
 public class GasStation {
-    // approach 1 - Linear Scan TC: O(n^2) SC: O(1)
-    public int canCompleteCircuit(int[] gas, int[] cost) {
+//    // approach 1 - Linear Scan TC: O(n^2) SC: O(1)
+//    public int canCompleteCircuit(int[] gas, int[] cost) {
+//        for (int i = 0; i < gas.length; i++) {
+//            if (traverse(gas, cost, i)) {
+//                return i;
+//            }
+//        }
+//        return -1;
+//    }
+//
+//    private boolean traverse(int[] gas, int[] cost, int start) {
+//        // base case
+//        if (gas[start] - cost[start] < 0) {
+//            return false;
+//        }
+//
+//        // traverse
+//        int net = 0;
+//        for (int i = 0; i < gas.length; i++) {
+//            int index = (start + i) % gas.length;
+//            net += gas[index] - cost[index];
+//
+//            // check
+//            if (net < 0) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+//
+//    // approach 2 - Greedy TC: O(n^2) SC: O(n)
+//    public int canCompleteCircuit2(int[] gas, int[] cost) {
+//        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+//        for (int i = 0; i < gas.length; i++) {
+//            if (gas[i] - cost[i] >= 0) {
+//                pq.offer(new int[]{i, gas[i] - cost[i]});
+//            }
+//        }
+//
+//        // traverse the index with the largest net value
+//        while (!pq.isEmpty()) {
+//            int index = pq.poll()[0];
+//            if (traverse(gas, cost, index)) {
+//                return index;
+//            }
+//        }
+//        return -1;
+//    }
+//
+//    // approach 3 - Linear Scan TC: O(n) SC: O(1)
+//    public int canCompleteCircuit3(int[] gas, int[] cost) {
+//        int i = 0;
+//        while (i < gas.length) {
+//            // traverse
+//            int net = 0;
+//            int count = 0;
+//            while (count < gas.length) {
+//                int index = (i + count) % gas.length;
+//                net += gas[index] - cost[index];
+//
+//                // check
+//                if (net < 0) {
+//                    break;
+//                }
+//                count++;
+//            }
+//
+//            if (count == gas.length) {
+//                return i;
+//            }
+//            i += count + 1;
+//        }
+//        return -1;
+//    }
+//
+//    // approach 4 - Greedy TC: O(n) SC: O(1)
+//    public int canCompleteCircuit4(int[] gas, int[] cost) {
+//        int net = 0;
+//        int curr = 0;
+//        int start = 0;
+//        for (int i = 0; i < gas.length; i++) {
+//            curr += gas[i] - cost[i];
+//            net += gas[i] - cost[i];
+//            if (curr < 0) {
+//                start = i + 1;
+//                curr = 0;
+//            }
+//        }
+//        return net < 0 ? -1 : start % gas.length;
+//    }
+
+    // approach 1: Linear Scan TC: O(n^2) SC: O(1)
+    public int canCompleteCircuit2(int[] gas, int[] cost) {
         for (int i = 0; i < gas.length; i++) {
-            if (traverse(gas, cost, i)) {
+            // check
+            if (traverse(i, gas, cost)) {
                 return i;
             }
         }
         return -1;
     }
 
-    private boolean traverse(int[] gas, int[] cost, int start) {
-        // base case
-        if (gas[start] - cost[start] < 0) {
-            return false;
-        }
-
-        // traverse
+    private boolean traverse(int start, int[] gas, int[] cost) {
         int net = 0;
         for (int i = 0; i < gas.length; i++) {
-            int index = (start + i) % gas.length;
+            int index = (i + start) % gas.length;
             net += gas[index] - cost[index];
 
             // check
@@ -67,71 +155,28 @@ public class GasStation {
         return true;
     }
 
-    // approach 2 - Greedy TC: O(n^2) SC: O(n)
-    public int canCompleteCircuit2(int[] gas, int[] cost) {
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
-        for (int i = 0; i < gas.length; i++) {
-            if (gas[i] - cost[i] >= 0) {
-                pq.offer(new int[]{i, gas[i] - cost[i]});
-            }
-        }
-
-        // traverse the index with the largest net value
-        while (!pq.isEmpty()) {
-            int index = pq.poll()[0];
-            if (traverse(gas, cost, index)) {
-                return index;
-            }
-        }
-        return -1;
-    }
-
-    // approach 3 - Linear Scan TC: O(n) SC: O(1)
-    public int canCompleteCircuit3(int[] gas, int[] cost) {
-        int i = 0;
-        while (i < gas.length) {
-            // traverse
-            int net = 0;
-            int count = 0;
-            while (count < gas.length) {
-                int index = (i + count) % gas.length;
-                net += gas[index] - cost[index];
-
-                // check
-                if (net < 0) {
-                    break;
-                }
-                count++;
-            }
-
-            if (count == gas.length) {
-                return i;
-            }
-            i += count + 1;
-        }
-        return -1;
-    }
-
-    // approach 4 - Greedy TC: O(n) SC: O(1)
-    public int canCompleteCircuit4(int[] gas, int[] cost) {
-        int net = 0;
-        int curr = 0;
+    // approach 2: Greedy TC: O(n) SC: O(1)
+    public int canCompleteCircuit(int[] gas, int[] cost) {
         int start = 0;
+        int curr = 0;
+        int net = 0;
         for (int i = 0; i < gas.length; i++) {
             curr += gas[i] - cost[i];
             net += gas[i] - cost[i];
+
+            // check
             if (curr < 0) {
                 start = i + 1;
                 curr = 0;
             }
         }
-        return net < 0 ? -1 : start % gas.length;
+        return net >= 0 ? start : -1; 
     }
 
     public static void main(String[] args) {
         GasStation test = new GasStation();
         int[] gas = new int[]{1, 2, 3, 4, 5};
         int[] cost = new int[]{3, 4, 5, 1, 2};
-        System.out.println(test.canCompleteCircuit4(gas, cost));
+        System.out.println(test.canCompleteCircuit(gas, cost));
     }
 }
