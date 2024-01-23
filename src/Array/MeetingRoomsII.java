@@ -1,6 +1,8 @@
 package Array;
 
 /*
+LeetCode 253
+
 Given an array of meeting time intervals intervals where intervals[i] = [starti, endi], return the minimum number of conference rooms required.
 */
 
@@ -27,9 +29,36 @@ public class MeetingRoomsII {
         return minHeap.size();
     }
 
+    // approach 2: Intervals TC: O(n) SC: O(n)
+    public int minMeetingRooms2(int[][] intervals) {
+        // get max
+        int max = 0;
+        for (int i = 0; i < intervals.length; i++) {
+            max = Math.max(intervals[i][1], max);
+        }
+
+        // create count arr of meetings
+        int[] countArr = new int[max + 1];
+        for (int[] interval : intervals) {
+            countArr[interval[0]]++;
+            countArr[interval[1]]--;
+        }
+
+        // find max sum
+        int sum = 0;
+        int maxSum = 0;
+        for (int i = 0; i < countArr.length; i++) {
+            sum += countArr[i];
+
+            // update
+            maxSum = Math.max(sum, maxSum);
+        }
+        return maxSum;
+    }
+
     public static void main(String[] args) {
         MeetingRoomsII test = new MeetingRoomsII();
         int[][] intervals = new int[][]{{0, 30}, {15, 20}};
-        System.out.println(test.minMeetingRooms(intervals));
+        System.out.println(test.minMeetingRooms2(intervals));
     }
 }
