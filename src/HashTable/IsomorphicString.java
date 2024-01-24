@@ -1,16 +1,13 @@
 package HashTable;
 
 /*
-Two Strings are called isomorphic if the letters in one String can be remapped to get the second String. Remapping a letter means replacing all occurrences of it with another letter. The ordering of the letters remains unchanged. The mapping is two way and no two letters may map to the same letter, but a letter may map to itself. Determine if two given String are isomorphic.
+LeetCode 205
 
-        Assumptions:
+Given two strings s and t, determine if they are isomorphic.
 
-        The two given Strings are not null.
-        Examples:
+        Two strings s and t are isomorphic if the characters in s can be replaced to get t.
 
-        "abca" and "xyzx" are isomorphic since the mapping is 'a' <-> 'x', 'b' <-> 'y', 'c' <-> 'z'.
-
-        "abba" and "cccc" are not isomorphic.
+        All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.
 */
 
 import java.util.HashMap;
@@ -48,8 +45,37 @@ public class IsomorphicString {
         return true;
     }
 
+    // approach 1: Set and Map TC: O(n) SC: O(1)
+    public boolean isIsomorphic(String s, String t) {
+        Map<Character, Character> map = new HashMap<>();
+        Set<Character> used = new HashSet<>();
+
+        // map s to t
+        for (int i = 0; i < s.length(); i++) {
+            // check mapping
+            // case 1: s[i] => t[i] -> check
+            // case 2: no mapping -> map
+            if (!map.containsKey(s.charAt(i))) {
+                // case 1: valid
+                // case 2: invalid
+                if (used.contains(t.charAt(i))) {
+                    return false;
+                } else {
+                    map.put(s.charAt(i), t.charAt(i));
+                    used.add(t.charAt(i));
+                }
+            } else {
+                // check
+                if (map.get(s.charAt(i)) != t.charAt(i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         IsomorphicString test = new IsomorphicString();
-        System.out.println(test.isomorphic("aba", "aaa"));
+        System.out.println(test.isIsomorphic("aba", "aaa"));
     }
 }
