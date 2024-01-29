@@ -1,6 +1,8 @@
 package Array;
 
 /*
+LeetCode 238
+
 Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
 
         The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
@@ -35,7 +37,7 @@ public class ProductOfArrayExceptSelf {
 //    }
 
     // approach 2 - prefixSum + suffixSum TC: O(n) SC: O(n)
-    public int[] productExceptSelf(int[] nums) {
+    public int[] productExceptSelf2(int[] nums) {
         int[] prefixSum = new int[nums.length];
 
         // populate the prefixSum
@@ -45,6 +47,25 @@ public class ProductOfArrayExceptSelf {
         }
 
         // populate product in-place
+        int suffixSum = 1;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            prefixSum[i] *= suffixSum;
+            suffixSum *= nums[i];
+        }
+        return prefixSum;
+    }
+
+    // approach 1: Prefix Sum TC: O(n) SC: O(n)
+    public int[] productExceptSelf(int[] nums) {
+        // initialization
+        int[] prefixSum = new int[nums.length];
+        prefixSum[0] = 1;
+
+        // populate
+        for (int i = 1; i < nums.length; i++) {
+            prefixSum[i] = prefixSum[i - 1] * nums[i - 1];
+        }
+
         int suffixSum = 1;
         for (int i = nums.length - 1; i >= 0; i--) {
             prefixSum[i] *= suffixSum;

@@ -1,6 +1,8 @@
 package DP;
 
 /*
+LeetCode 300
+
 Given an array A[0]...A[n-1] of integers, find out the length of the longest ascending subsequence.
 
         Assumptions
@@ -57,27 +59,83 @@ public class LongestAscendingSubsequence {
 //         return globalMax;
 //     }
 
-    // approach 2 - Arrays + Binary Search TC: O(nlogn) SC: O(n)
+//    // approach 2 - Arrays + Binary Search TC: O(nlogn) SC: O(n)
+//    public int lengthOfLIS2(int[] nums) {
+//        // maintain a min ascending subsequence
+//        List<Integer> arr = new ArrayList<>();
+//        arr.add(nums[0]);
+//
+//        for (int i = 1; i < nums.length; i++) {
+//            // case 1: arr[i] > all numbers in subsequence
+//            // case 2: otherwise
+//            if (nums[i] > arr.get(arr.size() - 1)) {
+//                arr.add(nums[i]);
+//            } else {
+//                // replace the min greater number in subsequence with current number
+//                arr.set(find(arr, nums[i]), nums[i]);
+//            }
+//        }
+//        return arr.size();
+//    }
+//
+//    private int find(List<Integer> arr, int target) {
+//        // binary search to find the min greater number
+//        int left = 0;
+//        int right = arr.size() - 1;
+//        while (left < right) {
+//            int mid = (left + right) >> 1;
+//
+//            if (arr.get(mid) < target) {
+//                left = mid + 1;
+//            } else {
+//                right = mid;
+//            }
+//        }
+//        return left;
+//    }
+
+    // approach 1: DP TC: O(n^2) SC: O(n)
+    public int lengthOfLIS2(int[] nums) {
+        int[] dp = new int[nums.length];
+        int globalMax = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            int max = 1;
+
+            // search previous
+            for (int j = 0; j < i; j++) {
+                // check
+                if (nums[i] > nums[j]) {
+                    max = Math.max(max, dp[j] + 1);
+                }
+            }
+            dp[i] = max;
+            globalMax = Math.max(dp[i], globalMax);
+        }
+        return globalMax;
+    }
+
+    // approach 2: DP + Binary Search TC: O(nlogn) SC: O(n)
     public int lengthOfLIS(int[] nums) {
-        // maintain a min ascending subsequence
+        // maintain the min ascending subsequence
         List<Integer> arr = new ArrayList<>();
         arr.add(nums[0]);
 
         for (int i = 1; i < nums.length; i++) {
-            // case 1: arr[i] > all numbers in subsequence
+            // check
+            // case 1: last in ascending subsequence < current
             // case 2: otherwise
-            if (nums[i] > arr.get(arr.size() - 1)) {
+            if (arr.get(arr.size() - 1) < nums[i]) {
                 arr.add(nums[i]);
             } else {
-                // replace the min greater number in subsequence with current number
-                arr.set(find(arr, nums[i]), nums[i]);
+                int index = find(arr, nums[i]);
+                arr.set(index, nums[i]);
             }
         }
         return arr.size();
     }
 
     private int find(List<Integer> arr, int target) {
-        // binary search to find the min greater number
         int left = 0;
         int right = arr.size() - 1;
         while (left < right) {
