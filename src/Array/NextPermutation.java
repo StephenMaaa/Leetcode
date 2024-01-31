@@ -1,6 +1,8 @@
 package Array;
 
 /*
+LeetCode 31
+
 A permutation of an array of integers is an arrangement of its members into a sequence or linear order.
 
         For example, for arr = [1,2,3], the following are all the permutations of arr: [1,2,3], [1,3,2], [2, 1, 3], [2, 3, 1], [3,1,2], [3,2,1].
@@ -15,28 +17,59 @@ A permutation of an array of integers is an arrangement of its members into a se
 */
 
 public class NextPermutation {
-    // approach 1 - Arrays TC: O(n) SC: O(1)
+//    // approach 1 - Arrays TC: O(n) SC: O(1)
+//    public void nextPermutation(int[] nums) {
+//        // find the first fall-down index
+//        int index;
+//        for (index = nums.length - 2; index >=0; index--) {
+//            if (nums[index] < nums[index + 1]) {
+//                break;
+//            }
+//        }
+//
+//        // swap index with the min greater element
+//        if (index >= 0) {
+//            int i;
+//            for (i = index + 1; i < nums.length; i++) {
+//                if (nums[index] >= nums[i]) {
+//                    break;
+//                }
+//            }
+//            swap(nums, index, i - 1);
+//        }
+//
+//        // reverse the arr after that fall-down index
+//        index++;
+//        int end = nums.length - 1;
+//        while (index < end) {
+//            swap(nums, index++, end--);
+//        }
+//    }
+
+    // approach 1: Arrays TC: O(n) SC: O(1)
     public void nextPermutation(int[] nums) {
-        // find the first fall-down index
+        // find the first descending index
         int index;
-        for (index = nums.length - 2; index >=0; index--) {
+        for (index = nums.length - 2; index >= 0; index--) {
+            // check
             if (nums[index] < nums[index + 1]) {
                 break;
             }
         }
 
-        // swap index with the min greater element
+        // swap the first descending index with the next min greater
         if (index >= 0) {
             int i;
             for (i = index + 1; i < nums.length; i++) {
-                if (nums[index] > nums[i]) {
+                // check
+                if (nums[index] >= nums[i]) {
                     break;
                 }
             }
             swap(nums, index, i - 1);
         }
 
-        // reverse the arr after that fall-down index
+        // swap the rest descending arr to ascending
         index++;
         int end = nums.length - 1;
         while (index < end) {
