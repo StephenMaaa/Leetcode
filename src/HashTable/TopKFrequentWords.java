@@ -1,6 +1,8 @@
 package HashTable;
 
 /*
+LeetCode 692
+
 Given a composition with different kinds of words, return a list of the top K most frequent words in the composition.
 
         Assumptions
@@ -20,14 +22,14 @@ Given a composition with different kinds of words, return a list of the top K mo
 import java.util.*;
 
 public class TopKFrequentWords {
-    public class Cell {
-        String s;
-        int n;
-        public Cell(String s, int n) {
-            this.s = s;
-            this.n = n;
-        }
-    }
+//    public class Cell {
+//        String s;
+//        int n;
+//        public Cell(String s, int n) {
+//            this.s = s;
+//            this.n = n;
+//        }
+//    }
 
 //    public class MyComparator implements Comparator<Cell> {
 //        @Override
@@ -61,31 +63,31 @@ public class TopKFrequentWords {
 //        return ans;
 //    }
 
-    // approach 1 - Map + PriorityQueue (MinHeap) TC: O(nlogk) SC: O(n + k)
-    public List<String> topKFrequent(String[] words, int k) {
-        // generate a frequency map
-        Map<String, Integer> map = new HashMap<>();
-        for (int i = 0; i < words.length; i++) {
-            map.put(words[i], map.getOrDefault(words[i], 0) + 1);
-        }
-
-        // maintain a minHeap of size k
-        PriorityQueue<String> minHeap = new PriorityQueue<>((a, b) -> map.get(a) == map.get(b) ? b.compareTo(a) : map.get(a) - map.get(b));
-        for (String key : map.keySet()) {
-            minHeap.offer(key);
-            // check
-            if (minHeap.size() > k) {
-                minHeap.poll();
-            }
-        }
-
-        // populate
-        Deque<String> queue = new ArrayDeque<>();
-        while (!minHeap.isEmpty()) {
-            queue.offerFirst(minHeap.poll());
-        }
-        return new ArrayList<>(queue); 
-    }
+//    // approach 1 - Map + PriorityQueue (MinHeap) TC: O(nlogk) SC: O(n + k)
+//    public List<String> topKFrequent(String[] words, int k) {
+//        // generate a frequency map
+//        Map<String, Integer> map = new HashMap<>();
+//        for (int i = 0; i < words.length; i++) {
+//            map.put(words[i], map.getOrDefault(words[i], 0) + 1);
+//        }
+//
+//        // maintain a minHeap of size k
+//        PriorityQueue<String> minHeap = new PriorityQueue<>((a, b) -> map.get(a) == map.get(b) ? b.compareTo(a) : map.get(a) - map.get(b));
+//        for (String key : map.keySet()) {
+//            minHeap.offer(key);
+//            // check
+//            if (minHeap.size() > k) {
+//                minHeap.poll();
+//            }
+//        }
+//
+//        // populate
+//        Deque<String> queue = new ArrayDeque<>();
+//        while (!minHeap.isEmpty()) {
+//            queue.offerFirst(minHeap.poll());
+//        }
+//        return new ArrayList<>(queue);
+//    }
 
 //    // approach 2 - Map + Count Array (Bucket Sort) + Trie TC: O(n) SC: O(n)
 //    public List<String> topKFrequent(String[] words, int k) {
@@ -104,6 +106,34 @@ public class TopKFrequentWords {
 //
 //        // need a trie data structure to save O(logk) in each comparison
 //    }
+
+    // approach 1: Map + Priority Queue TC: O(nlogk) SC: O(n + k)
+    public List<String> topKFrequent(String[] words, int k) {
+        // initialization
+        Map<String, Integer> map = new HashMap<>();
+        for (String word : words) {
+            map.put(word, map.getOrDefault(word, 0) + 1);
+        }
+
+        PriorityQueue<String> pq = new PriorityQueue<>((a, b) -> map.get(a) == map.get(b) ? b.compareTo(a) : map.get(a) - map.get(b));
+
+        // populate
+        for (String key : map.keySet()) {
+            pq.offer(key);
+
+            // check
+            if (pq.size() > k) {
+                pq.poll();
+            }
+        }
+
+        // process
+        LinkedList<String> res = new LinkedList<>();
+        while (!pq.isEmpty()) {
+            res.addFirst(pq.poll());
+        }
+        return res;
+    }
 
     public static void main(String[] args) {
         String[] arr = new String[]{"i", "love", "leetcode", "i", "love", "coding"};
