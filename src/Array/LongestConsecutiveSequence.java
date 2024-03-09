@@ -119,6 +119,33 @@ public class LongestConsecutiveSequence {
 //        return max;
 //    }
 
+//    // approach 1: Set + Linear Scan TC: O(n) SC: O(n)
+//    public int longestConsecutive(int[] nums) {
+//        // initialization
+//        Set<Integer> set = new HashSet<>();
+//        for (int i : nums) {
+//            set.add(i);
+//        }
+//
+//        int max = 0;
+//        // scan
+//        for (int i = 0; i < nums.length; i++) {
+//            // check
+//            if (!set.contains(nums[i] - 1)) {
+//                int curr = nums[i];
+//                int count = 1;
+//
+//                // update
+//                while (set.contains(curr + 1)) {
+//                    curr++;
+//                    count++;
+//                }
+//                max = Math.max(count, max);
+//            }
+//        }
+//        return max;
+//    }
+
     // approach 1: Set + Linear Scan TC: O(n) SC: O(n)
     public int longestConsecutive(int[] nums) {
         // initialization
@@ -126,20 +153,23 @@ public class LongestConsecutiveSequence {
         for (int i : nums) {
             set.add(i);
         }
-
         int max = 0;
-        // scan
+
+        // search
         for (int i = 0; i < nums.length; i++) {
             // check
+            // case 1: nums[i] is the start of a sequence
+            // case 2: otherwise
             if (!set.contains(nums[i] - 1)) {
-                int curr = nums[i];
-                int count = 1;
-
-                // update
-                while (set.contains(curr + 1)) {
-                    curr++;
+                int start = nums[i];
+                int count = 0;
+                // count the length of sequence
+                while (set.contains(start)) {
+                    start++;
                     count++;
                 }
+
+                // update
                 max = Math.max(count, max);
             }
         }

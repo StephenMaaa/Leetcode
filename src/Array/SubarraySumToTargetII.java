@@ -1,6 +1,8 @@
 package Array;
 
 /*
+LeetCode 560
+
 Given an array nums and a target value k, find the totoal number of subarrays that sums to k.
 
         Note:
@@ -26,26 +28,49 @@ import java.util.Map;
 import java.util.Set;
 
 public class SubarraySumToTargetII {
-    // time complexity: O(n)
-    // space complexity: O(n)
-    public int numOfSubarraySumToK(int[] nums, int k) {
+//    // time complexity: O(n)
+//    // space complexity: O(n)
+//    public int numOfSubarraySumToK(int[] nums, int k) {
+//        int prefixSum = 0;
+//        int count = 0;
+//        Map<Integer, Integer> existed = new HashMap<>();
+//        existed.put(0, 1);
+//        for (int i = 0; i < nums.length; i++) {
+//            prefixSum += nums[i];
+//            if (existed.containsKey(prefixSum - k)) {
+//                count += existed.get(prefixSum - k);
+//            }
+//            existed.put(prefixSum, existed.getOrDefault(prefixSum, 0) + 1);
+//        }
+//        return count;
+//    }
+
+    // approach 1: Map + PrefixSum TC: O(n) SC: O(n)
+    public int subarraySum(int[] nums, int k) {
+        // initialization
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
         int prefixSum = 0;
         int count = 0;
-        Map<Integer, Integer> existed = new HashMap<>();
-        existed.put(0, 1);
+
+        // calculate prefix sum and search
         for (int i = 0; i < nums.length; i++) {
             prefixSum += nums[i];
-            if (existed.containsKey(prefixSum - k)) {
-                count += existed.get(prefixSum - k);
+
+            // check
+            if (map.containsKey(prefixSum - k)) {
+                count += map.get(prefixSum - k);
             }
-            existed.put(prefixSum, existed.getOrDefault(prefixSum, 0) + 1);
+
+            // update
+            map.put(prefixSum, map.getOrDefault(prefixSum, 0) + 1);
         }
         return count;
     }
 
     public static void main(String[] args) {
         SubarraySumToTargetII test = new SubarraySumToTargetII();
-        int[] arr = new int[]{-10, -5, -4, 3, 1, 4, -2, -9, -10, 3, -2, 2, -5, 4, 5, -7, 9, 1, 2, -10};
-        System.out.println(test.numOfSubarraySumToK(arr, -1));
+        int[] arr = new int[]{1, 1, 1};
+        System.out.println(test.subarraySum(arr, 2));
     }
 }

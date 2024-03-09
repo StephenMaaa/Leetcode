@@ -33,66 +33,102 @@ public class GroupAnagrams {
 //        return res;
 //    }
 
-    // approach 1: Map + Sorting TC: O(knlogk) SC: O(kn)
-    public List<List<String>> groupAnagrams2(String[] strs) {
-        // initialization
-        Map<String, List<String>> map = new HashMap<>();
+//    // approach 1: Map + Sorting TC: O(knlogk) SC: O(kn)
+//    public List<List<String>> groupAnagrams2(String[] strs) {
+//        // initialization
+//        Map<String, List<String>> map = new HashMap<>();
+//
+//        for (String s : strs) {
+//            // get key
+//            char[] arr = s.toCharArray();
+//            Arrays.sort(arr);
+//            String key = new String(arr);
+//
+//            // check
+//            if (!map.containsKey(key)) {
+//                map.put(key, new ArrayList<>());
+//            }
+//
+//            // update
+//            map.get(key).add(s);
+//        }
+//
+//        // populate
+//        List<List<String>> res = new ArrayList<>();
+//        for (String key : map.keySet()) {
+//            res.add(map.get(key));
+//        }
+//        return res;
+//    }
+//
+//    // approach 2: Counting TC: O(kn) SC: O(kn)
+//    public List<List<String>> groupAnagrams(String[] strs) {
+//        // initialization
+//        Map<String, List<String>> map = new HashMap<>();
+//        int[] count = new int[26];
+//
+//        for (String s : strs) {
+//            // count occurrence
+//            Arrays.fill(count, 0);
+//            for (char c : s.toCharArray()) {
+//                count[c - 'a']++;
+//            }
+//
+//            // get key
+//            StringBuilder sb = new StringBuilder();
+//            for (int i = 0; i < count.length; i++) {
+//                sb.append(count[i]);
+//                sb.append('#');
+//            }
+//            String key = sb.toString();
+//
+//            // check
+//            if (!map.containsKey(key)) {
+//                map.put(key, new ArrayList<>());
+//            }
+//
+//            // update
+//            map.get(key).add(s);
+//        }
+//
+//        // populate
+//        List<List<String>> res = new ArrayList<>();
+//        for (String key : map.keySet()) {
+//            res.add(map.get(key));
+//        }
+//        return res;
+//    }
 
-        for (String s : strs) {
-            // get key
-            char[] arr = s.toCharArray();
-            Arrays.sort(arr);
-            String key = new String(arr);
-
-            // check
-            if (!map.containsKey(key)) {
-                map.put(key, new ArrayList<>());
-            }
-
-            // update
-            map.get(key).add(s);
-        }
-
-        // populate
-        List<List<String>> res = new ArrayList<>();
-        for (String key : map.keySet()) {
-            res.add(map.get(key));
-        }
-        return res;
-    }
-
-    // approach 2: Counting TC: O(kn) SC: O(kn)
+    // approach 1: Counting + Map TC: O(kn) SC: O(kn)
     public List<List<String>> groupAnagrams(String[] strs) {
         // initialization
+        List<List<String>> res = new ArrayList<>();
         Map<String, List<String>> map = new HashMap<>();
-        int[] count = new int[26];
 
-        for (String s : strs) {
-            // count occurrence
-            Arrays.fill(count, 0);
-            for (char c : s.toCharArray()) {
+        // group
+        for (String str : strs) {
+            // count frequency
+            int[] count = new int[26];
+            for (char c : str.toCharArray()) {
                 count[c - 'a']++;
             }
 
-            // get key
+            // construct
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < count.length; i++) {
                 sb.append(count[i]);
-                sb.append('#');
+                sb.append('+');
             }
-            String key = sb.toString();
 
-            // check
+            // check anagram
+            String key = sb.toString();
             if (!map.containsKey(key)) {
                 map.put(key, new ArrayList<>());
             }
-
-            // update
-            map.get(key).add(s);
+            map.get(key).add(str);
         }
 
         // populate
-        List<List<String>> res = new ArrayList<>();
         for (String key : map.keySet()) {
             res.add(map.get(key));
         }
