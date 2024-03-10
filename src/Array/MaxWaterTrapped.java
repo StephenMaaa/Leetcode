@@ -1,6 +1,8 @@
 package Array;
 
 /*
+LeetCode 42
+
 Given a non-negative integer array representing the heights of a list of adjacent bars. Suppose each bar has a width of 1. Find the largest amount of water that can be trapped in the histogram.
 
         Assumptions
@@ -83,90 +85,157 @@ public class MaxWaterTrapped {
 //        return res;
 //    }
 
-    // approach 2 - Two Pointers TC: O(n) SC: O(1)
-    public int trap2(int[] height) {
-        int res = 0;
-        int left = 0;
-        int right = height.length - 1;
-        int leftBound = -1;
-        int rightBound = -1;
-        while (left < right) {
-            if (height[left] < height[right]) {
-                // check if bounded
-                if (leftBound < height[left]) {
-                    leftBound = height[left];
-                } else {
-                    res += leftBound - height[left];
-                }
-                left++;
-            } else {
-                // check if bounded
-                if (rightBound < height[right]) {
-                    rightBound = height[right];
-                } else {
-                    res += rightBound - height[right];
-                }
-                right--;
-            }
-        }
-        return res;
-    }
+//    // approach 2 - Two Pointers TC: O(n) SC: O(1)
+//    public int trap2(int[] height) {
+//        int res = 0;
+//        int left = 0;
+//        int right = height.length - 1;
+//        int leftBound = -1;
+//        int rightBound = -1;
+//        while (left < right) {
+//            if (height[left] < height[right]) {
+//                // check if bounded
+//                if (leftBound < height[left]) {
+//                    leftBound = height[left];
+//                } else {
+//                    res += leftBound - height[left];
+//                }
+//                left++;
+//            } else {
+//                // check if bounded
+//                if (rightBound < height[right]) {
+//                    rightBound = height[right];
+//                } else {
+//                    res += rightBound - height[right];
+//                }
+//                right--;
+//            }
+//        }
+//        return res;
+//    }
+//
+//    // approach 1: Stack TC: O(n) SC: O(n)
+//    public int trap3(int[] height) {
+//        Deque<Integer> stack = new ArrayDeque<>();
+//        int res = 0;
+//
+//        // iterate heights
+//        for (int i = 0; i < height.length; i++) {
+//            // trap
+//            while (!stack.isEmpty() && height[stack.peekFirst()] <= height[i]) {
+//                // get right bound
+//                int rightBound = height[stack.pollFirst()];
+//
+//                // get left bound
+//                // edge case: leak to the left
+//                if (stack.isEmpty()) {
+//                    continue;
+//                }
+//
+//                int dist = i - stack.peekFirst() - 1;
+//                res += dist * (Math.min(height[stack.peekFirst()], height[i]) - rightBound);
+//            }
+//            stack.offerFirst(i);
+//        }
+//        return res;
+//    }
+//
+//    // approach 2: Two Pointers TC: O(n) SC: O(1)
+//    public int trap(int[] height) {
+//        int left = 0;
+//        int right = height.length - 1;
+//        int leftBound = -1;
+//        int rightBound = -1;
+//        int res = 0;
+//
+//        // move two pointers
+//        while (left < right) {
+//            if (height[left] < height[right]) {
+//                // check leftBound
+//                if (leftBound < height[left]) {
+//                    leftBound = height[left];
+//                } else {
+//                    res += leftBound - height[left];
+//                }
+//                left++;
+//            } else {
+//                // check rightBound
+//                if (rightBound < height[right]) {
+//                    rightBound = height[right];
+//                } else {
+//                    res += rightBound - height[right];
+//                }
+//                right--;
+//            }
+//        }
+//        return res;
+//    }
 
-    // approach 1: Stack TC: O(n) SC: O(n)
-    public int trap3(int[] height) {
-        Deque<Integer> stack = new ArrayDeque<>();
-        int res = 0;
-
-        // iterate heights
-        for (int i = 0; i < height.length; i++) {
-            // trap
-            while (!stack.isEmpty() && height[stack.peekFirst()] <= height[i]) {
-                // get right bound
-                int rightBound = height[stack.pollFirst()];
-
-                // get left bound
-                // edge case: leak to the left
-                if (stack.isEmpty()) {
-                    continue;
-                }
-
-                int dist = i - stack.peekFirst() - 1;
-                res += dist * (Math.min(height[stack.peekFirst()], height[i]) - rightBound);
-            }
-            stack.offerFirst(i);
-        }
-        return res;
-    }
+//    // approach 1: Monotonic Stack TC: O(n) SC: O(n)
+//    public int trap(int[] height) {
+//        // initialization
+//        Deque<Integer> stack = new ArrayDeque<>();
+//        int count = 0;
+//
+//        // linear scan
+//        for (int i = 0; i < height.length; i++) {
+//            // check possible containers
+//            while (!stack.isEmpty() && height[stack.peekFirst()] <= height[i]) {
+//                // get right bound
+//                int rightBound = height[stack.pollFirst()];
+//
+//                // check edge case: no left bound
+//                if (stack.isEmpty()) {
+//                    continue;
+//                }
+//
+//                int left = stack.peekFirst();
+//
+//                // calculate volume
+//                count += (i - left - 1) * (Math.min(height[left], height[i]) - rightBound);
+//            }
+//            stack.offerFirst(i);
+//        }
+//        return count;
+//    }
 
     // approach 2: Two Pointers TC: O(n) SC: O(1)
     public int trap(int[] height) {
+        // initialization
         int left = 0;
         int right = height.length - 1;
         int leftBound = -1;
         int rightBound = -1;
-        int res = 0;
+        int count = 0;
 
-        // move two pointers
+        // two pointers scan
         while (left < right) {
+            // check left height and right height
+            // case 1: left < right -> move right
+            // case 2: left >= right -> move left
             if (height[left] < height[right]) {
                 // check leftBound
-                if (leftBound < height[left]) {
-                    leftBound = height[left];
+                // case 1: left < leftBound -> update volume
+                // case 2: left >= leftBound -> update leftBound
+                if (height[left] < leftBound) {
+                    count += leftBound - height[left];
                 } else {
-                    res += leftBound - height[left];
+                    leftBound = height[left];
                 }
                 left++;
             } else {
                 // check rightBound
-                if (rightBound < height[right]) {
-                    rightBound = height[right];
+                // case 1: right < rightBound -> update volume
+                // case 2: right >= rightBound -> update rightBound
+                if (height[right] < rightBound) {
+                    count += rightBound - height[right];
                 } else {
-                    res += rightBound - height[right];
+                    rightBound = height[right];
                 }
                 right--;
             }
         }
-        return res;
+        return count;
     }
 
     public static void main(String[] args) {
