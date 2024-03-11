@@ -13,47 +13,77 @@ Given a non-negative integer array representing the heights of a list of adjacen
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Stack;
 
 public class LargestRectangleInHistogram {
-    // time complexity: O(n)
-    // space complexity: O(n)
-    public int largest(int[] array) {
-        // maintain an ascending stack
-        Deque<Integer> stack = new ArrayDeque<>();
-        int max = 0;
+//    // time complexity: O(n)
+//    // space complexity: O(n)
+//    public int largest(int[] array) {
+//        // maintain an ascending stack
+//        Deque<Integer> stack = new ArrayDeque<>();
+//        int max = 0;
+//
+//        for (int i = 0; i <= array.length; i++) {
+//            // right bound
+//            int rightHeight = i == array.length ? 0 : array[i];
+//
+//            // calculate area
+//            while (!stack.isEmpty() && array[stack.peekFirst()] >= rightHeight) {
+//                int height = array[stack.pollFirst()];
+//                int leftBound = stack.isEmpty() ? -1 : stack.peekFirst();
+//                int area = height * (i - leftBound - 1);
+//                max = Math.max(max, area);
+//            }
+//            stack.offerFirst(i);
+//        }
+//        return max;
+//    }
 
-        for (int i = 0; i <= array.length; i++) {
-            // right bound
-            int rightHeight = i == array.length ? 0 : array[i];
+//    // approach 1 - Monotonic Stack TC: O(n) SC: O(n)
+//    public int largestRectangleArea(int[] heights) {
+//        Deque<Integer> stack = new ArrayDeque<>();
+//        int max = 0;
+//
+//        for (int i = 0; i <= heights.length; i++) {
+//            int rightHeight = i == heights.length ? 0 : heights[i];
+//
+//            // maintain a monotonic ascending stack
+//            while (!stack.isEmpty() && heights[stack.peekFirst()] > rightHeight) {
+//                int height = heights[stack.pollFirst()];
+//                int leftBound = stack.isEmpty() ? -1 : stack.peekFirst();
+//
+//                // update max
+//                max = Math.max(max, height * (i - leftBound - 1));
+//            }
+//            stack.offerFirst(i);
+//        }
+//        return max;
+//    }
 
-            // calculate area
-            while (!stack.isEmpty() && array[stack.peekFirst()] >= rightHeight) {
-                int height = array[stack.pollFirst()];
-                int leftBound = stack.isEmpty() ? -1 : stack.peekFirst();
-                int area = height * (i - leftBound - 1);
-                max = Math.max(max, area);
-            }
-            stack.offerFirst(i);
-        }
-        return max;
-    }
-
-    // approach 1 - Monotonic Stack TC: O(n) SC: O(n)
+    // approach 1: Stack TC: O(n) SC: O(n)
     public int largestRectangleArea(int[] heights) {
+        // initialization
         Deque<Integer> stack = new ArrayDeque<>();
         int max = 0;
 
+        // linear scan
         for (int i = 0; i <= heights.length; i++) {
-            int rightHeight = i == heights.length ? 0 : heights[i];
+            // get height at the index
+            int height = i == heights.length ? 0 : heights[i];
 
             // maintain a monotonic ascending stack
-            while (!stack.isEmpty() && heights[stack.peekFirst()] > rightHeight) {
-                int height = heights[stack.pollFirst()];
-                int leftBound = stack.isEmpty() ? -1 : stack.peekFirst();
+            while (!stack.isEmpty() && heights[stack.peekFirst()] > height) {
+                // get height of the right bound
+                int rightHeight = heights[stack.pollFirst()];
 
-                // update max
-                max = Math.max(max, height * (i - leftBound - 1));
+                // get left bound
+                int left = stack.isEmpty() ? -1 : stack.peekFirst();
+
+                // calculate
+                max = Math.max(rightHeight * (i - left - 1), max);
             }
+
+            // add to stack
             stack.offerFirst(i);
         }
         return max;

@@ -11,20 +11,40 @@ import java.util.Arrays;
 import java.util.Deque;
 
 public class DailyTemperatures {
+//    // approach 1: Stack TC: O(n) SC: O(n)
+//    public int[] dailyTemperatures(int[] temperatures) {
+//        // initialization
+//        int[] res = new int[temperatures.length];
+//        Deque<Integer> stack = new ArrayDeque<>();
+//
+//        for (int i = 0; i < temperatures.length; i++) {
+//            // check
+//            while (!stack.isEmpty() && temperatures[stack.peekFirst()] < temperatures[i]) {
+//                int index = stack.pollFirst();
+//                res[index] = i - index;
+//            }
+//
+//            // add
+//            stack.offerFirst(i);
+//        }
+//        return res;
+//    }
+
     // approach 1: Stack TC: O(n) SC: O(n)
     public int[] dailyTemperatures(int[] temperatures) {
         // initialization
-        int[] res = new int[temperatures.length];
         Deque<Integer> stack = new ArrayDeque<>();
+        int[] res = new int[temperatures.length];
 
+        // linear scan
         for (int i = 0; i < temperatures.length; i++) {
-            // check
+            // maintain a monotonic decreasing stack
             while (!stack.isEmpty() && temperatures[stack.peekFirst()] < temperatures[i]) {
                 int index = stack.pollFirst();
                 res[index] = i - index;
             }
 
-            // add
+            // add to stack
             stack.offerFirst(i);
         }
         return res;
