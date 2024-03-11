@@ -1,6 +1,8 @@
 package String;
 
 /*
+LeetCode 424
+
 You are given a string s and an integer k. You can choose any character of the string and change it to any other uppercase English character. You can perform this operation at most k times.
 
         Return the length of the longest substring containing the same letter you can get after performing the above operations.
@@ -57,38 +59,73 @@ public class LongestRepeartingCharacterReplacement {
 //        }
 //    }
 
-    // approach 1 - Sliding Window TC: O(n) SC: O(1)
+//    // approach 1 - Sliding Window TC: O(n) SC: O(1)
+//    public int characterReplacement(String s, int k) {
+//        int[] freq = new int[26];
+//        int start = 0;
+//        int max = 0;
+//        int maxFreq = 0;
+//
+//        // maintain a sliding window of maxFreq + k
+//        for (int i = 0; i < s.length(); i++) {
+//            char c = s.charAt(i);
+//
+//            // update frequency
+//            freq[c - 'A']++;
+//
+//            // get max freq
+//            maxFreq = 0;
+//            for (int j = 0; j < freq.length; j++) {
+//                maxFreq = Math.max(maxFreq, freq[j]);
+//            }
+//
+//            // maintain sliding window by shrinking the start until k == others
+//            while (k < i - start + 1 - maxFreq) {
+//                // remove
+//                freq[s.charAt(start++) - 'A']--;
+//                maxFreq = 0;
+//                for (int j = 0; j < freq.length; j++) {
+//                    maxFreq = Math.max(maxFreq, freq[j]);
+//                }
+//            }
+//
+//            // update max
+//            max = Math.max(max, i - start + 1);
+//        }
+//        return max;
+//    }
+
+    // approach 1: Sliding Window TC: O(n) SC: O(1)
     public int characterReplacement(String s, int k) {
+        // initialization
         int[] freq = new int[26];
-        int start = 0;
         int max = 0;
-        int maxFreq = 0;
+        int left = 0;
 
-        // maintain a sliding window of maxFreq + k
+        // sliding window
         for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
+            // update freq
+            freq[s.charAt(i) - 'A']++;
 
-            // update frequency
-            freq[c - 'A']++;
-
-            // get max freq
-            maxFreq = 0;
-            for (int j = 0; j < freq.length; j++) {
-                maxFreq = Math.max(maxFreq, freq[j]);
+            // find max freq in sliding window
+            int maxFreq = 0;
+            for (int j : freq) {
+                maxFreq = Math.max(j, maxFreq);
             }
 
-            // maintain sliding window by shrinking the start until k == others
-            while (k < i - start + 1 - maxFreq) {
-                // remove
-                freq[s.charAt(start++) - 'A']--;
-                maxFreq = 0;
-                for (int j = 0; j < freq.length; j++) {
-                    maxFreq = Math.max(maxFreq, freq[j]);
+            // maintain sliding window with k replacements
+            while (k < i - left + 1 - maxFreq) {
+                freq[s.charAt(left) - 'A']--;
+                left++;
+
+                // find max freq in sliding window
+                for (int j : freq) {
+                    maxFreq = Math.max(j, maxFreq);
                 }
             }
 
-            // update max
-            max = Math.max(max, i - start + 1);
+            // update
+            max = Math.max(i - left + 1, max);
         }
         return max;
     }

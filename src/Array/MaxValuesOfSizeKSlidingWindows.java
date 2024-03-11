@@ -75,31 +75,60 @@ public class MaxValuesOfSizeKSlidingWindows {
         return res;
     }
 
-    // approach 1 - Sliding Window + Monotonic Stack TC: O(n) SC: O(k)
+//    // approach 1 - Sliding Window + Monotonic Stack TC: O(n) SC: O(k)
+//    public int[] maxSlidingWindow(int[] nums, int k) {
+//        int[] res = new int[nums.length - k + 1];
+//
+//        // monotonic descending stack
+//        Deque<Integer> stack = new ArrayDeque<>();
+//        for (int i = 0; i < nums.length; i++) {
+//            // clear indexes outside sliding window of size k
+//            while (!stack.isEmpty() && stack.peekFirst() <= i - k) {
+//                stack.pollFirst();
+//            }
+//
+//            // maintain a montonic descending stack
+//            while (!stack.isEmpty() && nums[stack.peekLast()] <= nums[i]) {
+//                stack.pollLast();
+//            }
+//
+//            stack.offerLast(i);
+//
+//            // update
+//            if (i >= k - 1) {
+//                res[i - k + 1] = nums[stack.peekFirst()];
+//            }
+//        }
+//        return res;
+//    }
+
+    // approach 1: Deque (Monotonic Stack) TC: O(n) SC: O(k)
     public int[] maxSlidingWindow(int[] nums, int k) {
+        // initialization
+        Deque<Integer> deque = new ArrayDeque<>();
         int[] res = new int[nums.length - k + 1];
 
-        // monotonic descending stack
-        Deque<Integer> stack = new ArrayDeque<>();
+        // sliding window
         for (int i = 0; i < nums.length; i++) {
-            // clear indexes outside sliding window of size k
-            while (!stack.isEmpty() && stack.peekFirst() <= i - k) {
-                stack.pollFirst();
+            // remove index outside of sliding window
+            while (!deque.isEmpty() && deque.peekFirst() <= i - k) {
+                deque.pollFirst();
             }
 
-            // maintain a montonic descending stack
-            while (!stack.isEmpty() && nums[stack.peekLast()] <= nums[i]) {
-                stack.pollLast();
+            // maintain a monotonic decreasing stack
+            while (!deque.isEmpty() && nums[deque.peekLast()] <= nums[i]) {
+                deque.pollLast();
             }
 
-            stack.offerLast(i);
+            // add
+            deque.offerLast(i);
 
             // update
             if (i >= k - 1) {
-                res[i - k + 1] = nums[stack.peekFirst()];
+                res[i - k + 1] = nums[deque.peekFirst()];
             }
         }
-        return res; 
+        return res;
     }
 
     public static void main(String[] args) {

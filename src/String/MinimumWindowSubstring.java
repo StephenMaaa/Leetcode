@@ -136,6 +136,64 @@ public class MinimumWindowSubstring {
 //        return s.substring(minStart, minEnd + 1);
 //    }
 
+//    // approach 1: Sliding Window TC: O(m + n) SC: O(n)
+//    public String minWindow(String s, String t) {
+//        // initialization
+//        Map<Character, Integer> map = new HashMap<>();
+//        for (char c : t.toCharArray()) {
+//            map.put(c, map.getOrDefault(c, 0) + 1);
+//        }
+//        int left = 0;
+//        int unmatched = t.length();
+//        int minLeft = -1;
+//        int minRight = s.length();
+//
+//        // sliding window
+//        for (int i = 0; i < s.length(); i++) {
+//            // check current char
+//            // case 1: current char not in target
+//            // case 2: current char in target
+//            char c = s.charAt(i);
+//            if (map.containsKey(c)) {
+//                // check count of char
+//                // case 1: not overfull -> update
+//                // case 2: overfull
+//                int count = map.get(c);
+//                map.put(c, count - 1);
+//                if (count > 0) {
+//                    unmatched--;
+//                }
+//            }
+//
+//            // prune
+//            // move the left bound to resolve overfull
+//            while (left < s.length()) {
+//                // move left and check the char at left bound
+//                // case 1: leftmost char not in target
+//                // case 2: leftmost char in target and overfull -> update
+//                // case 3: leftmost char in target and not overfull -> stop
+//
+//                char leftChar = s.charAt(left);
+//                if (map.containsKey(leftChar) && map.get(leftChar) >= 0) {
+//                    break;
+//                }
+//
+//                if (map.containsKey(leftChar)) {
+//                    // update map
+//                    map.put(leftChar, map.get(leftChar) + 1);
+//                }
+//                left++;
+//            }
+//
+//            // check
+//            if (unmatched == 0 && i - left + 1 < minRight - minLeft + 1) {
+//                minLeft = left;
+//                minRight = i;
+//            }
+//        }
+//        return minLeft == -1 ? "" : s.substring(minLeft, minRight + 1);
+//    }
+
     // approach 1: Sliding Window TC: O(m + n) SC: O(n)
     public String minWindow(String s, String t) {
         // initialization
@@ -144,7 +202,7 @@ public class MinimumWindowSubstring {
             map.put(c, map.getOrDefault(c, 0) + 1);
         }
         int left = 0;
-        int unmatched = t.length();
+        int unmatched = map.size();
         int minLeft = -1;
         int minRight = s.length();
 
@@ -160,7 +218,7 @@ public class MinimumWindowSubstring {
                 // case 2: overfull
                 int count = map.get(c);
                 map.put(c, count - 1);
-                if (count > 0) {
+                if (count == 1) {
                     unmatched--;
                 }
             }
@@ -197,6 +255,6 @@ public class MinimumWindowSubstring {
     public static void main(String[] args) {
         MinimumWindowSubstring test = new MinimumWindowSubstring();
 //        System.out.println(test.minWindow("ABDCEFGBBCDFE", "BCE"));
-        System.out.println(test.minWindow("aaabbbbbcdd", "abcdd"));
+        System.out.println(test.minWindow("aba", "aa"));
     }
 }
